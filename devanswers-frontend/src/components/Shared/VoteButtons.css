@@ -37,6 +37,25 @@
   margin-top: 0.25rem;
 }
 
+.vb-btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.vb-btn-count {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.vb-btn-count-sm {
+  font-size: 0.8rem;
+}
+
+.vb-btn-count-lg {
+  font-size: 1rem;
+}
+
 /* ── Icons ───────────────────────────────────────────── */
 .vb-icon-up {
   color: #5eba7d;

@@ -1,8 +1,13 @@
 import './Footer.css';
 
-// TODO: Implement the Footer component displaying copyright info.
 const Footer = () => {
-  return null;
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="footer-wrapper" role="contentinfo">
+      <p className="footer-text mb-0">&copy; {currentYear} DevAnswers. All rights reserved.</p>
+    </footer>
+  );
 };
 
 export default Footer;

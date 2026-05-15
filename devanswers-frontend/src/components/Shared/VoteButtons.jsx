@@ -2,7 +2,15 @@ import { Button } from 'react-bootstrap';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import './VoteButtons.css';
 
-const VoteButtons = ({ voteCount = 0, onUpvote, onDownvote, variant = 'link', size = 'sm' }) => {
+const VoteButtons = ({
+  voteCount = 0,
+  upvoteCount,
+  downvoteCount,
+  onUpvote,
+  onDownvote,
+  variant = 'link',
+  size = 'sm',
+}) => {
   const btnClass =
     variant === 'outline'
       ? `vb-btn-outline vb-btn-outline-${size}`
@@ -15,7 +23,12 @@ const VoteButtons = ({ voteCount = 0, onUpvote, onDownvote, variant = 'link', si
         onClick={onUpvote}
         className={`vb-btn-up ${btnClass}`}
       >
-        <FaArrowUp className="vb-icon-up" />
+        <span className="vb-btn-content">
+          <FaArrowUp className="vb-icon-up" />
+          {Number.isFinite(upvoteCount) && (
+            <span className={`vb-btn-count vb-btn-count-${size}`}>{upvoteCount}</span>
+          )}
+        </span>
       </Button>
 
       <span className={`vb-count vb-count-${size}`}>{voteCount}</span>
@@ -25,7 +38,12 @@ const VoteButtons = ({ voteCount = 0, onUpvote, onDownvote, variant = 'link', si
         onClick={onDownvote}
         className={`vb-btn-down ${btnClass}`}
       >
-        <FaArrowDown className="vb-icon-down" />
+        <span className="vb-btn-content">
+          <FaArrowDown className="vb-icon-down" />
+          {Number.isFinite(downvoteCount) && (
+            <span className={`vb-btn-count vb-btn-count-${size}`}>{downvoteCount}</span>
+          )}
+        </span>
       </Button>
     </div>
   );

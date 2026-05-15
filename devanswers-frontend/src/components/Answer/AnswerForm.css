@@ -1,0 +1,34 @@
+.answer-form-card {
+	border: 1px solid var(--border-color);
+	border-radius: 12px;
+	box-shadow: var(--card-shadow);
+	background-color: var(--card-bg);
+}
+
+.answer-form-title {
+	font-size: clamp(1.1rem, 3vw, 1.3rem);
+	font-weight: 700;
+	color: var(--text-color);
+	margin-bottom: 1rem;
+}
+
+.answer-form-textarea {
+	border-radius: 10px;
+	font-size: 0.95rem;
+	line-height: 1.5;
+	resize: vertical;
+}
+
+.answer-form-submit-btn {
+	background-color: var(--primary-color);
+	border-color: var(--primary-color);
+	border-radius: 8px;
+	padding: 0.5rem 1rem;
+	font-weight: 600;
+}
+
+.answer-form-submit-btn:hover,
+.answer-form-submit-btn:focus {
+	background-color: var(--primary-hover);
+	border-color: var(--primary-hover);
+}

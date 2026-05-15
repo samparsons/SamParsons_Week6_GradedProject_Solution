@@ -1,0 +1,67 @@
+.answer-list-wrapper {
+	margin-top: 1.5rem;
+}
+
+.answer-list-title {
+	font-size: clamp(1.1rem, 3vw, 1.35rem);
+	font-weight: 700;
+	color: var(--text-color);
+}
+
+.answer-empty-card {
+	border: 1px dashed var(--border-color);
+	border-radius: 12px;
+	background-color: var(--bg-secondary);
+}
+
+.answer-empty-text {
+	color: var(--text-muted);
+	font-size: 0.95rem;
+}
+
+.answer-card {
+	border: 1px solid var(--border-color);
+	border-radius: 12px;
+	box-shadow: var(--card-shadow);
+	transition: transform 0.2s ease;
+}
+
+.answer-card:hover {
+	transform: translateY(-2px);
+}
+
+.answer-card-even {
+	background-color: var(--card-bg) !important;
+	border-left: 4px solid #0a95ff;
+}
+
+.answer-card-odd {
+	background-color: rgba(244, 130, 37, 0.08) !important;
+	border-left: 4px solid #f48225;
+}
+
+[data-theme="dark"] .answer-card-even {
+	background-color: rgba(77, 163, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .answer-card-odd {
+	background-color: rgba(244, 130, 37, 0.16) !important;
+}
+
+.answer-vote-col {
+	min-width: 48px;
+}
+
+.answer-text {
+	color: var(--text-color);
+	line-height: 1.6;
+}
+
+.answer-meta {
+	font-size: 0.9rem;
+	color: var(--text-muted);
+}
+
+.answer-meta-icon {
+	font-size: 0.8rem;
+}
