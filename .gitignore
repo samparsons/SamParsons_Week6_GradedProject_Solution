@@ -1,0 +1,8 @@
+devanswers-frontend/.env
+devanswers-frontend/.env.local
+devanswers-frontend/.env.development.local
+devanswers-frontend/.env.test.local
+devanswers-frontend/.env.production.local
+devanswers-frontend/node_modules/
+devanswers-frontend/dist/
+devanswers-frontend/coverage/
