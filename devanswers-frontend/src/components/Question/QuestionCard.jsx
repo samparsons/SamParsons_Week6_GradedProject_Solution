@@ -25,11 +25,12 @@ const normalizeQuestionVotes = (question) => {
     ...question,
     upvotes,
     downvotes,
-    voteCount: upvotes.length + downvotes.length,
+    totalVotes: upvotes.length + downvotes.length,
+    voteCount: upvotes.length - downvotes.length,
   };
 };
 
-const QuestionCard = ({ question }) => {
+const QuestionCard = ({ question, onSelectQuestion }) => {
   const [questionState, setQuestionState] = useState(() => normalizeQuestionVotes(question));
 
   useEffect(() => {
@@ -40,10 +41,16 @@ const QuestionCard = ({ question }) => {
 
   const upvoteCount = questionState.upvotes.length;
   const downvoteCount = questionState.downvotes.length;
-  const voteCount = upvoteCount + downvoteCount;
+  const totalVotes = upvoteCount + downvoteCount;
+  const voteCount = upvoteCount - downvoteCount;
   const answerCount = questionState.answerCount || (Array.isArray(questionState.answers) ? questionState.answers.length : 0);
   const authorName = questionState.author?.name || 'Anonymous';
   const createdDate = questionState.createdAt ? new Date(questionState.createdAt) : new Date();
+  const handleOpenQuestionDetail = () => {
+    if (typeof onSelectQuestion === 'function') {
+      onSelectQuestion(questionState._id);
+    }
+  };
 
   const handleVote = (voteType) => {
     const voteToken = `local-${voteType}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -54,7 +61,8 @@ const QuestionCard = ({ question }) => {
         return {
           ...previousQuestion,
           upvotes,
-          voteCount: upvotes.length + previousQuestion.downvotes.length,
+          totalVotes: upvotes.length + previousQuestion.downvotes.length,
+          voteCount: upvotes.length - previousQuestion.downvotes.length,
         };
       }
 
@@ -62,7 +70,8 @@ const QuestionCard = ({ question }) => {
       return {
         ...previousQuestion,
         downvotes,
-        voteCount: previousQuestion.upvotes.length + downvotes.length,
+        totalVotes: previousQuestion.upvotes.length + downvotes.length,
+        voteCount: previousQuestion.upvotes.length - downvotes.length,
       };
     });
 
@@ -84,6 +93,7 @@ const QuestionCard = ({ question }) => {
               variant="link"
               size="sm"
             />
+            <div className="text-muted small mt-1">{totalVotes} total</div>
             <div className="d-flex align-items-center gap-1 text-muted mt-1">
               <FaComments className="qcard-comment-icon" />
               <span className="qcard-answer-count">{answerCount}</span>
@@ -93,7 +103,13 @@ const QuestionCard = ({ question }) => {
           {/* Content Column */}
           <div className="flex-grow-1">
             <Card.Title className="mb-2">
-              <span className="qcard-title-link">{questionState.title}</span>
+              <button
+                type="button"
+                className="qcard-title-link qcard-title-btn"
+                onClick={handleOpenQuestionDetail}
+              >
+                {questionState.title}
+              </button>
             </Card.Title>
             <Card.Text className="qcard-desc mb-2">{questionState.description}</Card.Text>
             <div className="mb-2">

@@ -7,6 +7,7 @@ import Login from './pages/Auth/Login.jsx';
 import Register from './pages/Auth/Register.jsx';
 
 function App() {
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
     return saved ? JSON.parse(saved) : false;
@@ -22,12 +23,17 @@ function App() {
   }, [isDarkMode]);
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  const handleSelectQuestion = (questionId) => setSelectedQuestionId(questionId);
+  const handleBackToHome = () => setSelectedQuestionId(null);
 
   return (
     <BaseLayout isDarkMode={isDarkMode} toggleTheme={toggleTheme}>
       <SideBarLayout>
-        <Home />
-        {/* <QuestionDetail id={"q1"} /> */}
+        {selectedQuestionId ? (
+          <QuestionDetail id={selectedQuestionId} onBack={handleBackToHome} />
+        ) : (
+          <Home onSelectQuestion={handleSelectQuestion} />
+        )}
         {/* <Login /> */}
         {/* <Register /> */}
       </SideBarLayout>

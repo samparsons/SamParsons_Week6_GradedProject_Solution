@@ -25,8 +25,8 @@ const normalizeQuestionVotes = (question) => {
     ...question,
     upvotes,
     downvotes,
-    // Keep vote semantics consistent with AnswerList: total interactions = upvotes + downvotes.
-    voteCount: upvotes.length + downvotes.length,
+    totalVotes: upvotes.length + downvotes.length,
+    voteCount: upvotes.length - downvotes.length,
   };
 };
 
@@ -43,7 +43,8 @@ const QuestionContent = ({ question }) => {
 
   const upvoteCount = questionState.upvotes.length;
   const downvoteCount = questionState.downvotes.length;
-  const voteCount = upvoteCount + downvoteCount;
+  const totalVotes = upvoteCount + downvoteCount;
+  const voteCount = upvoteCount - downvoteCount;
   const createdDateText = questionState.createdAt
     ? new Date(questionState.createdAt).toLocaleDateString('en-US', {
         month: 'short',
@@ -59,7 +60,8 @@ const QuestionContent = ({ question }) => {
     setQuestionState((previousQuestion) => ({
       ...previousQuestion,
       upvotes: [...previousQuestion.upvotes, voteToken],
-      voteCount: previousQuestion.upvotes.length + 1 + previousQuestion.downvotes.length,
+      totalVotes: previousQuestion.upvotes.length + 1 + previousQuestion.downvotes.length,
+      voteCount: previousQuestion.upvotes.length + 1 - previousQuestion.downvotes.length,
     }));
 
     alert('Upvoted!');
@@ -71,7 +73,8 @@ const QuestionContent = ({ question }) => {
     setQuestionState((previousQuestion) => ({
       ...previousQuestion,
       downvotes: [...previousQuestion.downvotes, voteToken],
-      voteCount: previousQuestion.upvotes.length + previousQuestion.downvotes.length + 1,
+      totalVotes: previousQuestion.upvotes.length + previousQuestion.downvotes.length + 1,
+      voteCount: previousQuestion.upvotes.length - (previousQuestion.downvotes.length + 1),
     }));
 
     alert('Downvoted!');
@@ -88,7 +91,11 @@ const QuestionContent = ({ question }) => {
           <div className="qcontent-meta d-flex flex-wrap gap-3 gap-sm-4">
             <span className="d-flex align-items-center gap-2">
               <FaArrowUp className="qcontent-vote-icon-up" />
-              <strong>{voteCount}</strong> votes
+              <strong>{totalVotes}</strong> total votes
+            </span>
+            <span className="d-flex align-items-center gap-2">
+              <FaArrowUp className="qcontent-vote-icon-up" />
+              <strong>{voteCount}</strong> score
             </span>
             <span className="d-flex align-items-center gap-2">
               <FaClock />

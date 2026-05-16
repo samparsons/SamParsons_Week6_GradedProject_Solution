@@ -2,7 +2,7 @@ import { Spinner } from 'react-bootstrap';
 import QuestionCard from './QuestionCard.jsx';
 import './QuestionList.css';
 
-const QuestionList = ({ questions, loading }) => {
+const QuestionList = ({ questions, loading, onSelectQuestion }) => {
   const questionList = Array.isArray(questions) ? questions : [];
 
   if (loading) {
@@ -25,7 +25,11 @@ const QuestionList = ({ questions, loading }) => {
   return (
     <section>
       {questionList.map((question, index) => (
-        <QuestionCard key={question._id || `question-${index}`} question={question} />
+        <QuestionCard
+          key={question._id || `question-${index}`}
+          question={question}
+          onSelectQuestion={onSelectQuestion}
+        />
       ))}
     </section>
   );

@@ -23,8 +23,9 @@ const normalizeAnswersForState = (items) =>
       ...answer,
       upvotes,
       downvotes,
-      // Class convention: vote total is the sum of upvotes and downvotes.
-      voteCount: upvotes.length + downvotes.length,
+      totalVotes: upvotes.length + downvotes.length,
+      // Score convention: upvotes - downvotes.
+      voteCount: upvotes.length - downvotes.length,
     };
   });
 
@@ -53,7 +54,8 @@ const AnswerList = ({ answers }) => {
         return {
           ...answer,
           upvotes: [...answer.upvotes, voteToken],
-          voteCount: answer.upvotes.length + 1 + answer.downvotes.length,
+          totalVotes: answer.upvotes.length + 1 + answer.downvotes.length,
+          voteCount: answer.upvotes.length + 1 - answer.downvotes.length,
         };
       })
     );
@@ -74,7 +76,8 @@ const AnswerList = ({ answers }) => {
         return {
           ...answer,
           downvotes: [...answer.downvotes, voteToken],
-          voteCount: answer.upvotes.length + answer.downvotes.length + 1,
+          totalVotes: answer.upvotes.length + answer.downvotes.length + 1,
+          voteCount: answer.upvotes.length - (answer.downvotes.length + 1),
         };
       })
     );
@@ -100,7 +103,8 @@ const AnswerList = ({ answers }) => {
           const answerKey = getAnswerKey(answer, index);
           const upvoteCount = answer.upvotes?.length ?? 0;
           const downvoteCount = answer.downvotes?.length ?? 0;
-          const voteCount = upvoteCount + downvoteCount;
+          const totalVotes = upvoteCount + downvoteCount;
+          const voteCount = upvoteCount - downvoteCount;
           const authorName = answer.author?.name || 'Anonymous';
           const postedDate = answer.createdAt
             ? new Date(answer.createdAt).toLocaleDateString('en-US', {
@@ -127,6 +131,7 @@ const AnswerList = ({ answers }) => {
                     variant="outline"
                     size="sm"
                   />
+                  <small className="text-muted d-block text-center mt-1">{totalVotes} total</small>
                 </div>
 
                 <div className="flex-grow-1">

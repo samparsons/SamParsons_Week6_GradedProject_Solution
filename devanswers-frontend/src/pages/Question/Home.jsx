@@ -4,7 +4,7 @@ import QuestionList from '../../components/Question/QuestionList.jsx';
 import { questions as questionData } from '../../../data/questions.js';
 import './Home.css';
 
-const Home = () => {
+const Home = ({ onSelectQuestion }) => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +39,11 @@ const Home = () => {
             </Button>
           </div>
 
-          <QuestionList questions={questions} loading={loading} />
+          <QuestionList
+            questions={questions}
+            loading={loading}
+            onSelectQuestion={onSelectQuestion}
+          />
         </Col>
       </Row>
     </Container>
