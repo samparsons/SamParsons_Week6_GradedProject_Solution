@@ -1,9 +1,72 @@
+import { useEffect, useState } from 'react';
 import { Card, Row, Col, Badge } from 'react-bootstrap';
 import { FaArrowUp, FaUser, FaClock } from 'react-icons/fa';
 import VoteButtons from '../Shared/VoteButtons.jsx';
 import './QuestionContent.css';
 
+const normalizeQuestionVotes = (question) => {
+  if (!question) {
+    return null;
+  }
+
+  const upvotes = Array.isArray(question.upvotes) ? [...question.upvotes] : [];
+  const downvotes = Array.isArray(question.downvotes) ? [...question.downvotes] : [];
+
+  return {
+    ...question,
+    upvotes,
+    downvotes,
+    // Keep vote semantics consistent with AnswerList: total interactions = upvotes + downvotes.
+    voteCount: upvotes.length + downvotes.length,
+  };
+};
+
 const QuestionContent = ({ question }) => {
+  const [questionState, setQuestionState] = useState(() => normalizeQuestionVotes(question));
+
+  useEffect(() => {
+    setQuestionState(normalizeQuestionVotes(question));
+  }, [question]);
+
+  if (!questionState) {
+    return null;
+  }
+
+  const upvoteCount = questionState.upvotes.length;
+  const downvoteCount = questionState.downvotes.length;
+  const voteCount = upvoteCount + downvoteCount;
+  const createdDateText = questionState.createdAt
+    ? new Date(questionState.createdAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : 'Recently';
+  const authorName = questionState.author?.name || 'Anonymous';
+
+  const handleUpvote = () => {
+    const voteToken = `local-question-upvote-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+    setQuestionState((previousQuestion) => ({
+      ...previousQuestion,
+      upvotes: [...previousQuestion.upvotes, voteToken],
+      voteCount: previousQuestion.upvotes.length + 1 + previousQuestion.downvotes.length,
+    }));
+
+    alert('Upvoted!');
+  };
+
+  const handleDownvote = () => {
+    const voteToken = `local-question-downvote-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+    setQuestionState((previousQuestion) => ({
+      ...previousQuestion,
+      downvotes: [...previousQuestion.downvotes, voteToken],
+      voteCount: previousQuestion.upvotes.length + previousQuestion.downvotes.length + 1,
+    }));
+
+    alert('Downvoted!');
+  };
 
   return (
     <>
@@ -11,20 +74,16 @@ const QuestionContent = ({ question }) => {
       <Card className="qcontent-header-card mb-4">
         <Card.Body className="p-3 p-sm-4">
           <Card.Title as="h2" className="qcontent-title mb-3">
-            {question.title}
+            {questionState.title}
           </Card.Title>
           <div className="qcontent-meta d-flex flex-wrap gap-3 gap-sm-4">
             <span className="d-flex align-items-center gap-2">
               <FaArrowUp className="qcontent-vote-icon-up" />
-              <strong>{question.voteCount || 0}</strong> votes
+              <strong>{voteCount}</strong> votes
             </span>
             <span className="d-flex align-items-center gap-2">
               <FaClock />
-              Asked {new Date(question.createdAt).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })}
+              Asked {createdDateText}
             </span>
           </div>
         </Card.Body>
@@ -37,9 +96,11 @@ const QuestionContent = ({ question }) => {
             {/* Voting Controls */}
             <Col xs="auto" className="d-flex flex-column align-items-center pe-3 pe-sm-4">
               <VoteButtons
-                voteCount={question.voteCount || 0}
-                onUpvote={() => alert('Upvoted!')}
-                onDownvote={() => alert('Downvoted!')}
+                voteCount={voteCount}
+                upvoteCount={upvoteCount}
+                downvoteCount={downvoteCount}
+                onUpvote={handleUpvote}
+                onDownvote={handleDownvote}
                 variant="outline"
                 size="lg"
               />
@@ -47,18 +108,18 @@ const QuestionContent = ({ question }) => {
 
             {/* Main Content */}
             <Col>
-              <div className="qcontent-description mb-4">{question.description}</div>
+              <div className="qcontent-description mb-4">{questionState.description}</div>
               <div className="mb-4">
-                {question.tags?.map((tag) => (
-                  <Badge key={tag.name} className="qcontent-tag-badge me-2 mb-2">
-                    {tag.name}
+                {questionState.tags?.map((tag) => (
+                  <Badge key={tag.name || tag} className="qcontent-tag-badge me-2 mb-2">
+                    {tag.name || tag}
                   </Badge>
                 ))}
               </div>
               <div className="qcontent-author-row d-flex align-items-center gap-2">
                 <FaUser className="qcontent-user-icon" />
                 <span>Posted by </span>
-                <strong className="qcontent-author-name">{question.author.name}</strong>
+                <strong className="qcontent-author-name">{authorName}</strong>
               </div>
             </Col>
           </Row>
