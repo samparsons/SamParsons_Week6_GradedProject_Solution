@@ -5,9 +5,19 @@ import VoteButtons from '../Shared/VoteButtons.jsx';
 import './AnswerList.css';
 
 const normalizeAnswersForState = (items) =>
-  items.map((answer) => {
-    const upvotes = Array.isArray(answer.upvotes) ? [...answer.upvotes] : [];
-    const downvotes = Array.isArray(answer.downvotes) ? [...answer.downvotes] : [];
+  items.map((answer, index) => {
+    let upvotes = Array.isArray(answer.upvotes) ? [...answer.upvotes] : [];
+    let downvotes = Array.isArray(answer.downvotes) ? [...answer.downvotes] : [];
+    const seedVoteCount = Number.isFinite(answer.voteCount) ? answer.voteCount : 0;
+
+    // Preserve starter-data totals when vote arrays are empty.
+    if (upvotes.length === 0 && downvotes.length === 0 && seedVoteCount !== 0) {
+      if (seedVoteCount > 0) {
+        upvotes = Array.from({ length: seedVoteCount }, (_, voteIndex) => `seed-up-${answer._id || index}-${voteIndex}`);
+      } else {
+        downvotes = Array.from({ length: Math.abs(seedVoteCount) }, (_, voteIndex) => `seed-down-${answer._id || index}-${voteIndex}`);
+      }
+    }
 
     return {
       ...answer,

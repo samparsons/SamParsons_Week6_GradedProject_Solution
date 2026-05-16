@@ -9,8 +9,17 @@ const normalizeQuestionVotes = (question) => {
     return null;
   }
 
-  const upvotes = Array.isArray(question.upvotes) ? [...question.upvotes] : [];
-  const downvotes = Array.isArray(question.downvotes) ? [...question.downvotes] : [];
+  let upvotes = Array.isArray(question.upvotes) ? [...question.upvotes] : [];
+  let downvotes = Array.isArray(question.downvotes) ? [...question.downvotes] : [];
+  const seedVoteCount = Number.isFinite(question.voteCount) ? question.voteCount : 0;
+
+  if (upvotes.length === 0 && downvotes.length === 0 && seedVoteCount !== 0) {
+    if (seedVoteCount > 0) {
+      upvotes = Array.from({ length: seedVoteCount }, (_, voteIndex) => `seed-question-up-${question._id}-${voteIndex}`);
+    } else {
+      downvotes = Array.from({ length: Math.abs(seedVoteCount) }, (_, voteIndex) => `seed-question-down-${question._id}-${voteIndex}`);
+    }
+  }
 
   return {
     ...question,
